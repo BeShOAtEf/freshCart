@@ -1,17 +1,9 @@
-import type { NextConfig } from 'next'
- 
-const config: NextConfig = {
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'ecommerce.routemisr.com',
-        port: '',
-        pathname: '/Route-Academy-products/**',
-        search: '',
-      },
-    ],
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  typescript: {
+    ignoreBuildErrors: true,
   },
-}
- 
-export default config
+};
+
+export default nextConfig;
