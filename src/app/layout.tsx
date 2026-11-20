@@ -1,15 +1,20 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+
 import "./globals.css";
+import { Encode_Sans_Expanded, Geist } from "next/font/google";
+import Navbar from "./_components/Navbar";
+import Footer from "./_components/Footer";
+import { cn } from "@/lib/utils";
+import '@fortawesome/fontawesome-free/css/all.min.css'
+import NextAuthProvider from "@/Providers/Components/nextauth.providers";
+import Providers from "@/Providers/Components/ReactQueryProvider.Provider";
+  import { ToastContainer } from 'react-toastify';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const EnCode = Encode_Sans_Expanded({
   subsets: ["latin"],
+  weight: ["300", "400"],
 });
 
 export const metadata: Metadata = {
@@ -19,11 +24,20 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en" className={cn("font-sans", geist.variable)} >
+      <body className={`${EnCode.className} antialiased`}suppressHydrationWarning>
+        <Providers>
+          <ToastContainer></ToastContainer>
+        <div className="min-h-screen flex flex-col justify-between ">
+          <NextAuthProvider>
+
+          <Navbar />
+          <div className="container">{children}</div>
+          <Footer />
+          </NextAuthProvider>
+        </div>
+        </Providers>
+      </body>
     </html>
   );
 }
