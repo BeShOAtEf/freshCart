@@ -4,6 +4,15 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "://routemisr.com",
+        pathname: "/**",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
