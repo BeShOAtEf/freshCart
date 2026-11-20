@@ -5,55 +5,57 @@ import Github from "next-auth/providers/github";
 export const authOptions: NextAuthOptions = {
   secret: process.env.NextAUTH_SECRET || process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: '/auth/login'
+    signIn: "/auth/login",
   },
   providers: [
     Credentials({
       name: "credentials",
       credentials: {
         email: {},
-        password: {}
+        password: {},
       },
       authorize: async (credentials) => {
         const res = await fetch(`${process.env.API}/auth/signin`, {
-          method: 'POST',
+          method: "POST",
           body: JSON.stringify({
             email: credentials?.email,
-            password: credentials?.password
+            password: credentials?.password,
           }),
           headers: {
-            'Content-Type': 'application/json'
-          }
+            "Content-Type": "application/json",
+          },
         });
-        
+
         const payload = await res.json();
-        
-        if (payload.message === 'success') {
-          const decode = JSON.parse(Buffer.from(payload.token.split('.')[1], 'base64').toString());
+
+        if (payload.message === "success") {
+          const decode = JSON.parse(
+            Buffer.from(payload.token.split(".")[1], "base64").toString()
+          );
           return {
             id: decode.id,
             user: payload.user,
             token: payload.token,
           };
         } else {
-          throw new Error(payload.message || 'Something Went Wrong');
+          throw new Error(payload.message || "Something Went Wrong");
         }
-      }
+      },
     }),
     Github({
-      clientId: process.env.GITHUP_ID as string,
-      clientSecret: process.env.GITHUP_SECRET as string
-    })
+      clientId: (process.env.GITHUB_ID || process.env.GITHUP_ID) as string,
+      clientSecret: (process.env.GITHUB_SECRET || process.env.GITHUP_SECRET) as string,
+    }),
   ],
   callbacks: {
     async jwt({ token, user, account }) {
       if (user) {
-        if (account?.provider === 'github') {
+        if (account?.provider === "github") {
           token.user = {
-            name: user.name || '',
-            email: user.email || '',
-            image: user.image || '', 
-            role: 'user'
+            name: user.name || "",
+            email: user.email || "",
+            image: user.image || "",
+            role: "user",
           };
         } else {
           token.user = user.user;
@@ -71,5 +73,5 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
-  }
+  },
 };
